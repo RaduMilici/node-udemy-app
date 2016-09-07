@@ -4,13 +4,13 @@ var connection = mysql.createConnection(config.GetDbConnectionObject());
 //------------------------------------------------------------------------------
 function Insert(val, callback){
   var insertQuery = 
-    'INSERT INTO todos (username, todo, isDone, hasAttachment) VALUES (' + val + ');';
+  'INSERT INTO todos (username, todo, isDone, hasAttachment) VALUES ' + val + ';';
   query(insertQuery, callback);
 }
 //------------------------------------------------------------------------------
 function UpdateByUsername(name, val, callback){
   var updateQuery = 
-    'UPDATE todos SET ' + ObjToQuery(val) + ' WHERE username = "' + name + '";';
+  'UPDATE todos SET ' + ObjToUpdateQuery(val) + ' WHERE username = "' + name + '";';
   query(updateQuery, callback);
 }
 //------------------------------------------------------------------------------
@@ -19,18 +19,18 @@ function GetAll(callback){
   query(getQuery, callback);
 }
 //------------------------------------------------------------------------------
-function GetAllByUsername(name, callback){
+function GetByUsername(name, callback){
   var getByUsernameQuery =
     'SELECT * FROM todos WHERE username = "' + name + '";';
   query(getByUsernameQuery, callback);
 }
 //------------------------------------------------------------------------------
 function DeleteByUsername(name, callback){
-  var deleteByNameQuery = 'DELETE FROM todos WHERE username = "' + name + '";'
+  var deleteByNameQuery = 'DELETE FROM todos WHERE username = "' + name + '";';
   query(deleteByNameQuery, callback);
 }
 //------------------------------------------------------------------------------
-function ObjToQuery(obj){
+function ObjToUpdateQuery(obj){
   var arr = [];
   
   if(obj.username !== undefined)
@@ -48,6 +48,25 @@ function ObjToQuery(obj){
   return arr.join(',');
 }
 //------------------------------------------------------------------------------
+function ObjToInsertQuery(obj){
+  return [
+    '("' + obj.username + '"',
+    '"'  + obj.todo     + '"',
+           obj.isDone,
+           obj.hasAttachment + ')'
+  ].join(',');
+}
+//------------------------------------------------------------------------------
+function ArrayToInsertQuery(arr){
+  var q = [];
+  
+  arr.forEach(function(obj){
+    q.push(ObjToInsertQuery(obj));
+  });
+  
+  return q.join(','); 
+}
+//------------------------------------------------------------------------------
 function query(q, callback){
   callback = callback || function(){};
   
@@ -55,16 +74,17 @@ function query(q, callback){
   if(error)
     throw error;
   
-  callback(results);
+  callback(results, fields);
   });
 }
 //------------------------------------------------------------------------------
 
 module.exports = {
-  Insert: Insert,
-  GetAll: GetAll,
-  ObjToQuery: ObjToQuery,
-  DeleteByUsername: DeleteByUsername,
-  GetAllByUsername: GetAllByUsername,
-  UpdateByUsername: UpdateByUsername
+  Insert,
+  GetAll,
+  DeleteByUsername,
+  GetByUsername,
+  UpdateByUsername,
+  ObjToInsertQuery,
+  ArrayToInsertQuery
 };

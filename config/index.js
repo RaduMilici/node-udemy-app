@@ -12,5 +12,5 @@ function GetDbConnectionObject(){
 }
 
 module.exports = { 
-  GetDbConnectionObject: GetDbConnectionObject
+  GetDbConnectionObject
 };
