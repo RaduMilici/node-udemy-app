@@ -1,4 +1,5 @@
 var faker = require('faker');
+var shortid = require('shortid');
 var todoModel = require('../models/todoModel');
 
 //------------------------------------------------------------------------------
@@ -15,11 +16,12 @@ function addFakeUsers(results){
     return console.log('DB already populated.');
     
   var fakeUsers = [];
-  var num = 3;
+  var num = 100;
   
   for (var i = 0; i < num; i++){
     fakeUsers.push({
       username: faker.name.findName(),
+      id: shortid.generate(),
       todo: faker.lorem.sentence(),
       isDone: faker.random.boolean(),
       hasAttachment: faker.random.boolean()

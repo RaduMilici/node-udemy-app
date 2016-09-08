@@ -1,8 +1,8 @@
 var express = require('express');
 var app = express();
 var port = process.env.PORT || 3000;
-var setupController = require('./controllers/setupController');
 var apiController = require('./controllers/apiController');
+var setupController = require('./controllers/setupController');
 
 app.use('/assets', express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
