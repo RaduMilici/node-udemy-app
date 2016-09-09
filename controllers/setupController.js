@@ -16,7 +16,7 @@ function addFakeUsers(results){
     return console.log('DB already populated.');
     
   var fakeUsers = [];
-  var num = 100;
+  var num = 3;
   
   for (var i = 0; i < num; i++){
     fakeUsers.push({

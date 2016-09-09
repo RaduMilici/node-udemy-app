@@ -4,55 +4,55 @@ var connection = mysql.createConnection(config.GetDbConnectionObject());
 var tableColumns = 'id, username, todo, isDone, hasAttachment';
 //------------------------------------------------------------------------------
 function Insert(val, callback){
-  var insertQuery = 
-    'INSERT INTO todos (' + tableColumns + ') VALUES ' + val + ';';
-  query(insertQuery, callback);
+  query('INSERT INTO todos (' + tableColumns + ') VALUES ' + val + ';', 
+    callback);
 }
 //------------------------------------------------------------------------------
 function UpdateByUsername(name, val, callback){
-  var updateQuery = 
-  'UPDATE todos SET '+ObjToUpdateQuery(val)+' WHERE username = "' + name + '";';
-  query(updateQuery, callback); 
+  query('UPDATE todos SET ' + ObjToUpdateQuery(val) + ' WHERE username = "' 
+    + name + '";', callback); 
 }
 //------------------------------------------------------------------------------
 function UpdateById(id, val, callback){
-  var updateQuery = 
-    'UPDATE todos SET ' + ObjToUpdateQuery(val) + ' WHERE id = "' + id + '";';
-  query(updateQuery, callback); 
+  query('UPDATE todos SET ' + ObjToUpdateQuery(val) + ' WHERE id = "' + id + 
+    '";', callback); 
 }
 //------------------------------------------------------------------------------
 function GetAll(callback){
-  var getQuery = 'SELECT * FROM todos;';
-  query(getQuery, callback);
+  query('SELECT * FROM todos;', callback);
 }
 //------------------------------------------------------------------------------
 function GetByUsername(name, callback){
-  var getByUsernameQuery =
-    'SELECT * FROM todos WHERE username = "' + name + '";';
-  query(getByUsernameQuery, callback);
+  query('SELECT * FROM todos WHERE username = "' + name + '";', callback);
 }
 //------------------------------------------------------------------------------
 function GetById(id, callback){
-  var getByUsernameQuery = 'SELECT * FROM todos WHERE id = "' + id + '";';
-  query(getByUsernameQuery, callback);
+  query('SELECT * FROM todos WHERE id = "' + id + '";', callback);
 }
 //------------------------------------------------------------------------------
 function DeleteByUsername(name, callback){
-  var deleteByNameQuery = 'DELETE FROM todos WHERE username = "' + name + '";';
-  query(deleteByNameQuery, callback);
+  query('DELETE FROM todos WHERE username = "' + name + '";', callback);
 }
 //------------------------------------------------------------------------------
 function DeleteById(id, callback){
-  var deleteByNameQuery = 'DELETE FROM todos WHERE id = "' + id + '";';
-  query(deleteByNameQuery, callback);
+  query('DELETE FROM todos WHERE id = "' + id + '";', callback);
 }
 //------------------------------------------------------------------------------
 function ObjToUpdateQuery(obj){
   var arr = [];
 
-  for (var property in obj) 
-    if (obj.hasOwnProperty(property) && tableColumns.indexOf(property) > -1) 
-      arr.push(property + ' = ' + obj[property]);
+  for (var property in obj){ 
+    if (obj.hasOwnProperty(property) && tableColumns.indexOf(property) > -1){
+      var str = property + ' = ';
+      
+      if(obj[property] === 'true' || obj[property] === 'false')
+        str += obj[property];
+      else
+        str += '"' + obj[property] + '"';
+        
+      arr.push(str);
+    } 
+  }
     
   return arr.join(',');
 }
@@ -81,10 +81,10 @@ function query(q, callback){
   callback = callback || function(){};
   
   connection.query(q, function(error, results, fields){
-  if(error)
-    throw error;
-  
-  callback(results, fields);
+    if(error)
+      throw error;
+    
+    callback(results, fields);
   });
 }
 //------------------------------------------------------------------------------

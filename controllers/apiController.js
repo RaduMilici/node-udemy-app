@@ -25,7 +25,7 @@ function SetupApi(app){
       };
       
       todoModel.UpdateById(req.body.id, updateObj, function(){
-        res.send('Successfully updated ' + req.body.username);
+        res.send('Successfully updated id ' + req.body.id);
       });
     }
     // no username passed, insert new into db 
@@ -41,8 +41,8 @@ function SetupApi(app){
   
   //DELETE
   app.delete('/api/todo', function(req, res){
-    todoModel.DeleteByUsername(req.body.username, function(){
-      res.send('Successfully deleted ' + req.body.username + ' from db');
+    todoModel.DeleteById(req.body.id, function(){
+      res.send('Successfully deleted ' + req.body.id + ' from db');
     });
   });
 }
